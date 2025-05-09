@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: lotto
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lotto
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID} #구글 콘솔에서 발급받은 Client ID
+            client-secret: ${GOOGLE_CLIENT_SECRET} #구글 콘솔에서 발급받은 Client Secret
+            scope:
+              - openid
+              - profile
+              - email
+            redirect-uri: "{baseUrl}/login/oauth2/{registrationId}"
+            client-name: Google
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub
+
+#로또 프로젝트 커스텀 설정
+lotto:
+  min-number: ${LOTTO_MIN_NUMBER}
+  max-number: ${LOTTO_MAX_NUMBER}
+  selection-count: ${LOTTO_SELECTION_COUNT}
+
+#로또 관리자 계정(테스트용, 프로덕션에선 별도 시크릿 관리)
+admin:
+  email: ${ADMIN_EMAIL}
+  password: ${admin.password}
+  provider: "local"
+
+#JWT 설정
+app:
+  jwt:
+    #나중에 수정해야함
+    secret: ${JWT_SECRET} #반드시 .env 또는 Secret Manager에서 주입
+    expiration-ms: ${JWT_EXPIRATION_MS}
+
